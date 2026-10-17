@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restricted three-body explorer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>Restricted three-body explorer</h1>
+  <p>A massless body moving in the field of two stars on circular orbits (CR3BP). Pick a binary, launch a particle, and watch the Lagrange points decide what survives.</p>
+</header>
+
+<main>
+  <section class="card stage">
+    <canvas id="scene" aria-label="Rotating-frame view of the three-body problem"></canvas>
+    <p class="hint"><b>Click</b> to launch a particle at rest · <b>drag</b> to give it a velocity · <b>Space</b> pause · <b>C</b> clear.
+      Red/blue arrows at L1–L3: unstable / stable direction of the linearised motion.</p>
+    <p id="note" class="note"></p>
+    <div class="row">
+      <button id="pp">Pause</button><button id="clr">Clear</button>
+      <select id="sys"></select><select id="scn"></select>
+      <label class="file">Add presets…<input id="pfile" type="file" accept=".json"></label>
+    </div>
+  </section>
+
+  <aside>
+    <section class="card controls">
+      <h2>Controls</h2>
+      <label class="sl">Mass parameter μ<input id="mu" type="range" min="3" max="1000" step="0.5"><output id="muo"></output></label>
+      <label class="sl">Speed<input id="spd" type="range" min="0.05" max="8" step="0.05" value="1"><output id="spdo">1.00×</output></label>
+      <label class="sl">Trail length<input id="trl" type="range" min="50" max="6000" step="50" value="1500"><output id="trlo">1500</output></label>
+      <label class="sl">Zoom (half-width)<input id="zm" type="range" min="0.15" max="2.6" step="0.01" value="1.2"><output id="zmo">1.20</output></label>
+      <div class="row">
+        <select id="frm"><option value="rotating">Rotating frame</option><option value="inertial">Inertial frame</option></select>
+        <select id="ctr"><option value="bary">Centre: barycentre</option><option value="m2">Centre: secondary</option><option value="L1">Centre: L1</option><option value="L2">Centre: L2</option><option value="L4">Centre: L4</option></select>
+      </div>
+      <label><input id="hill" type="checkbox" checked> Shade the zone forbidden to the selected particle</label>
+      <label><input id="modes" type="checkbox" checked> Show eigen-directions at L1–L3</label>
+    </section>
+    <section class="card"><h2>Linear stability vs μ</h2><canvas id="stab" class="chart"></canvas></section>
+    <section class="card"><h2>Accuracy: Jacobi-constant error</h2><canvas id="drift" class="chart short"></canvas></section>
+    <section class="card"><h2>Readout</h2><dl id="ro"></dl></section>
+  </aside>
+</main>
+
+<section class="card how">
+  <h2>How it works</h2>
+  <p>Data flows one way: <code>data/presets.json</code> → state in <code>app.js</code> → physics and integration → drawing. Each file has one job.</p>
+  <ol>
+    <li><b>Model</b> (<code>physics.js</code>). In units where the stars are 1 apart and the binary period is 2π, the body feels
+      the stars' gravity plus the centrifugal and Coriolis terms of the rotating frame:
+      <code>x″ = 2y′ + Ωₓ, y″ = −2x′ + Ω_y</code>, with Ω = ½(x²+y²) + (1−μ)/r₁ + μ/r₂.</li>
+    <li><b>Equilibria</b>. Points where ∇Ω = 0. L4/L5 are exact (r₁ = r₂ = 1); L1–L3 are roots of Ωₓ on the x-axis, found by bisection in a bracket that holds exactly one sign change.</li>
+    <li><b>The field</b> (<code>scene.js</code>). 2Ω is sampled on a grid. The body can only be where 2Ω ≥ C (C is its Jacobi constant), so the shaded zone is where it can never go. Contours are traced with marching squares; the coloured ones are the values of C at L1, L2, L3 — the energies at which each gateway opens.</li>
+    <li><b>Linearisation</b>. Near an equilibrium the motion obeys ζ′ = Aζ. Its eigenvalues follow from λ⁴ + (4−Ωₓₓ−Ω_yy)λ² + (ΩₓₓΩ_yy−Ωₓ_y²) = 0. A real eigenvalue is an exponential escape route (arrows); an all-imaginary set means bounded libration. L4/L5 are stable only when 27μ(1−μ) < 1 (μ < 0.0385).</li>
+    <li><b>Integration</b> (<code>integrator.js</code>). Adaptive Dormand–Prince 5(4) with tolerance 1e-11. Steps shrink near a star and grow in quiet regions. The Jacobi constant should never change, so its error is plotted as an honest measure of accuracy.</li>
+    <li><b>Frames</b>. Trails are stored in the rotating frame together with the time of each point. The inertial view simply rotates every stored point by its own time, which is why a Trojan looks like a body circling with the binary.</li>
+  </ol>
+  <p><b>Adding presets.</b> Edit <code>data/presets.json</code> (see its <code>_help</code> field) or load another file with “Add presets…”. Opening <code>index.html</code> directly from disk blocks <code>fetch</code>; serve the folder with <code>python -m http.server</code> or use the file picker.</p>
+</section>
+
+<script src="js/physics.js"></script>
+<script src="js/integrator.js"></script>
+<script src="js/presets.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/plots.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

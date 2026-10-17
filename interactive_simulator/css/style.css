@@ -1,0 +1,32 @@
+/* style.css — layout and theme only. Colours are variables so the canvas code can read them too. */
+:root {
+  --bg: #f6f6f3; --card: #fff; --fg: #1b1c1e; --muted: #6a6c70; --line: #dcdcd6; --accent: #2a5bd7;
+  --forbidden: rgba(30, 30, 40, .14); --star1: #e8a600; --star2: #2a5bd7;
+
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #101113; --card: #18191c; --fg: #ececea; --muted: #9a9a94; --line: #2c2d31; --accent: #7a9bff; --forbidden: rgba(255, 255, 255, .09); --star1: #ffc233; --star2: #7a9bff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header, main { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 16px; } h1 { font-size: 20px; margin: 0 0 2px; } header p { margin: 0 0 12px; color: var(--muted); max-width: 70ch; }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 8px; }
+main { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+aside { display: grid; gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.how { max-width: 1168px; margin: 14px auto 24px; padding: 14px 16px; }
+.how ol { padding-left: 20px; } .how li { margin-bottom: 6px; } code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--bg); padding: 1px 4px; border-radius: 4px; }
+canvas { display: block; width: 100%; border-radius: 8px; touch-action: none; }
+#scene { aspect-ratio: 1; max-height: 78vh; width: min(100%, 78vh); margin: 0 auto; cursor: crosshair; background: var(--card); }
+.chart { aspect-ratio: 16 / 10; } .chart.short { aspect-ratio: 16 / 6; }
+.hint, .note { color: var(--muted); font-size: 12px; margin: 8px 0 0; } .note:empty { display: none; } .note { color: var(--accent); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+button, select, .file { background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 7px; padding: 6px 11px; font: inherit; cursor: pointer; }
+button:hover, select:hover, .file:hover { border-color: var(--accent); } .file input { display: none; }
+.sl { display: grid; grid-template-columns: 120px 1fr 56px; gap: 8px; align-items: center; margin-bottom: 6px; color: var(--muted); font-size: 12px; }
+.sl input { accent-color: var(--accent); } .sl output { text-align: right; color: var(--fg); font-variant-numeric: tabular-nums; }
+.controls label:not(.sl) { display: block; margin-top: 6px; font-size: 12.5px; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+dt { color: var(--muted); } dd { margin: 0; text-align: right; } .ok { color: #2e9e6a; } .bad { color: #e4572e; }

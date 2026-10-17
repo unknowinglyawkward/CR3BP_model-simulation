@@ -1,0 +1,19 @@
+{
+  "_help": "systems: just a mass parameter. scenarios: mu + particles. A particle is one of: {at:'L4',dx,dy,vx,vy} (offset from an equilibrium, velocities in the rotating frame), {x,y,vx,vy}, {around:'secondary',r} (prograde circular orbit), or {swarm:'L4',radius,count}. Optional per scenario: half (zoom), center ('bary'|'m2'|'L1'..), frame ('rotating'|'inertial').",
+  "systems": [
+    { "name": "Earth–Moon", "mu": 0.01215, "note": "Small μ: the secondary is a minor perturbation." },
+    { "name": "Sun–Jupiter", "mu": 0.000954, "note": "Trojan asteroids live at L4/L5." },
+    { "name": "Sun–Saturn", "mu": 0.000285 },
+    { "name": "Pluto–Charon", "mu": 0.1086, "note": "Above the Routh limit: no stable triangular points." },
+    { "name": "Routh limit", "mu": 0.038521, "note": "L4/L5 stability ends here: 27μ(1−μ) = 1." },
+    { "name": "Equal-mass binary", "mu": 0.5, "note": "Perfectly symmetric: L1 sits at the barycentre." }
+  ],
+  "scenarios": [
+    { "name": "Tadpole around L4", "mu": 0.01215, "half": 1.2, "note": "Small displacement from a stable point: bounded libration.", "particles": [ { "at": "L4", "dx": 0.04, "dy": 0 } ] },
+    { "name": "Trojan swarm (stable)", "mu": 0.001, "half": 1.4, "note": "40 bodies near L4 at μ=0.001: all stay.", "particles": [ { "swarm": "L4", "radius": 0.07, "count": 40 } ] },
+    { "name": "Trojan swarm (unstable)", "mu": 0.1, "half": 1.4, "note": "Same swarm at μ=0.1: spirals away.", "particles": [ { "swarm": "L4", "radius": 0.07, "count": 40 } ] },
+    { "name": "Leaving L1", "mu": 0.01215, "half": 0.4, "center": "L1", "note": "A saddle: tiny offset, exponential departure.", "particles": [ { "at": "L1", "dx": 0.002, "dy": 0.001 } ] },
+    { "name": "Orbit of the secondary", "mu": 0.01215, "half": 0.3, "center": "m2", "particles": [ { "around": "secondary", "r": 0.03 } ] },
+    { "name": "Same tadpole, inertial view", "mu": 0.01215, "half": 1.6, "frame": "inertial", "note": "The Trojan co-rotates with the binary.", "particles": [ { "at": "L4", "dx": 0.04, "dy": 0 } ] }
+  ]
+}
