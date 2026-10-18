@@ -4,7 +4,7 @@
   'use strict';
   const P = G.Physics, $ = id => document.getElementById(id), canvas = $('scene');
   const S = { mu: 0.01215, half: 1.2, cx: 0, cy: 0, center: 'bary', frame: 'rotating', play: true, speed: 1, trail: 1500,
-              hill: true, modes: true, t: 0, parts: [], sel: null, eq: null, lin: null, dirty: true, presets: null };
+              hill: true, modes: false, t: 0, parts: [], sel: null, eq: null, lin: null, dirty: true, presets: null };
   let hue = 0, drag = null;
 
   // ---- state changes ----
